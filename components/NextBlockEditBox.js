@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Stack, Select, Card } from "@sanity/ui";
 import PatchEvent, { set, unset } from "@sanity/form-builder/PatchEvent";
 import client from "part:@sanity/base/client";
@@ -12,17 +12,33 @@ const NextBlockEditBox = React.forwardRef((props, ref) => {
   const [boxes, setBoxes] = useState([]);
   const [isBoxRemoved, setIsBoxRemoved] = useState(false);
   const [isBoxUpdated, setIsBoxUpdated] = useState(false);
+  const [isBoxesFetched, setIsBoxesFetched] = useState(false);
+  const [currentSelectedQuestion, setCurrentSelectedQuestion] = useState({});
   const DOM_Container = useRef(null);
   const { type, onChange } = props;
-
-  //fetching added boxes
-  useEffect(()=>{
-    if(props.parent.next_block_references?.length >0){
-        setBoxes([...props.parent.next_block_references]);
-    }
-  },[])
-  // fetching all blocks
+  // remove all options if question changed
   useEffect(() => {
+    if (currentSelectedQuestion && currentSelectedQuestion?.answers) {
+      if (
+        currentSelectedQuestion?._id !== props.parent.selected_questions?._ref
+      ) {
+        console.log("question changed");
+        setBoxes([]);
+        onChange(PatchEvent.from(set([])));
+        // setIsBoxUpdated(true);
+      }
+    }
+  }, [currentSelectedQuestion, props.parent.selected_questions]);
+  useEffect(() => {
+    //fetching added boxes
+    setIsBoxesFetched(false);
+    if (props.parent.next_block_references?.length > 0) {
+      setBoxes([...props.parent.next_block_references]);
+      setIsBoxesFetched(true);
+    } else {
+      setIsBoxesFetched(true);
+    }
+    // fetching all blocks
     client
       .fetch(`*[_type == "blocks"]`)
       .then((response) => {
@@ -34,49 +50,56 @@ const NextBlockEditBox = React.forwardRef((props, ref) => {
   }, []);
   // fetching option
   useEffect(() => {
-    console.log("id: ", props.parent.question_options);
-    client
-      .fetch(`*[_id == "${props.parent.question_options?.question_id}"][0]`)
-      .then((response) => {
-        console.log("Main response: ",response.answers.find((dataObj) => dataObj._key === props.parent.question_options?.answer_id))
-        if (response) {
-          let option = response.answers.find((dataObj) => dataObj._key === props.parent.question_options?.answer_id)
-          console.log("response option is: ",option)
-          if (option) {
-            console.log("Enetered")
-            console.log(boxes.find((optionObj) => optionObj._key === option._key))
-            if (!boxes.find((optionObj) => optionObj._key === option._key)) {
-              setBoxes((prevBoxes) => [...prevBoxes, option]);
+    if (isBoxesFetched) {
+      let answerId = props.parent.question_options?.answer_id;
+      let isOptionBoxAlreadyExists =
+        boxes.length === 0
+          ? false
+          : boxes.find((optionOBJ) => optionOBJ?._key === answerId)
+          ? true
+          : false;
+      !isOptionBoxAlreadyExists &&
+        answerId &&
+        client
+          .fetch(`*[_id == "${props.parent.question_options?.question_id}"][0]`)
+          .then((response) => {
+            setCurrentSelectedQuestion(response);
+            console.log("option Response: ", response);
+            if (response) {
+              let option = response?.answers.find(
+                (optionOBJ) => optionOBJ?._key === answerId
+              );
+              option &&
+                setBoxes((prevBoxesState) => [...prevBoxesState, option]);
             }
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [props.parent.question_options, props.parent.selected_questions]);
-  // updated values on removed or updated box
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }
+  }, [props.parent.question_options, isBoxesFetched]);
+  // updated values on removing or updating the option box
   useEffect(() => {
     if (isBoxRemoved || isBoxUpdated) {
-        console.log("in updation: ",boxes);
+      console.log("Entered Of ");
       onChange(PatchEvent.from(set(boxes)));
-      setIsBoxRemoved(false);
-      setIsBoxUpdated(false);
+      isBoxRemoved && setIsBoxRemoved(false);
+      isBoxUpdated && setIsBoxUpdated(false);
     }
-  }, [isBoxRemoved, isBoxUpdated,boxes]);
+  }, [isBoxRemoved, isBoxUpdated]);
+
   // handlers
   function handleClickOnRemoveBox(id) {
-    let updatedBoxes = boxes.filter((box) => box._key !== id);
+    let updatedBoxes = boxes.filter((box) => box?._key !== id);
     setBoxes([...updatedBoxes]);
     setIsBoxRemoved(true);
   }
   function handleSelectorOnChange(e, id) {
     let select = e.target;
     let selectedBlock = select.options[select.selectedIndex].value;
-    setBoxes((prevBoxes) =>
-      prevBoxes.map((box) => {
-        if (box._key === id) {
-          console.log("entered");
+    setBoxes(
+      boxes.map((box) => {
+        if (box?._key === id) {
           box.next_block_ref = selectedBlock;
         }
         return box;
@@ -84,34 +107,43 @@ const NextBlockEditBox = React.forwardRef((props, ref) => {
     );
     setIsBoxUpdated(true);
   }
-  return (
-    <Stack ref={DOM_Container}>
-      <label className="label" style={{ marginBottom: "8px" }}>
-        {type.title}
-      </label>
-      {boxes.map((box) => {
-        return (
-          <Card className="card" key={box._key} id={box._key}>
-            <span className="option_label">{box.answer}</span>
-            <Select onChange={(e) => handleSelectorOnChange(e, box._key)}>
-              <option></option>
-              {blocks.map((block) => {
-                if (block) {
-                  return <option value={block._id}>{block.name}</option>;
-                }
-              })}
-            </Select>
-            <button
-              onClick={() => handleClickOnRemoveBox(box._key)}
-              className="option_label"
-            >
-              Remove
-            </button>
-          </Card>
-        );
-      })}
-    </Stack>
-  );
+  if (boxes && boxes.length > 0) {
+    return (
+      <Stack ref={DOM_Container}>
+        <label className="label" style={{ marginBottom: "8px" }}>
+          {type.title}
+        </label>
+        {boxes.map((box) => {
+          return (
+            <Card className="card" key={box?._key} id={box?._key}>
+              <span className="option_label">{box?.answer}</span>
+              <Select onChange={(e) => handleSelectorOnChange(e, box?._key)}>
+                <option></option>
+                {blocks.map((block) => {
+                  if (block) {
+                    return (
+                      <option
+                        value={block._id}
+                        selected={box?.next_block_ref === block?._id}
+                      >
+                        {block.name}
+                      </option>
+                    );
+                  }
+                })}
+              </Select>
+              <button
+                onClick={() => handleClickOnRemoveBox(box?._key)}
+                className="option_label"
+              >
+                Remove
+              </button>
+            </Card>
+          );
+        })}
+      </Stack>
+    );
+  }
 });
 
 export default NextBlockEditBox;

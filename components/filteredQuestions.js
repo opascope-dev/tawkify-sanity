@@ -4,6 +4,7 @@ import PatchEvent, { set, unset } from "@sanity/form-builder/PatchEvent";
 import client from "part:@sanity/base/client";
 
 import "../styles/selectedBlock.css?raw";
+import { useMemo } from "react";
 
 const filteredQuestions = React.forwardRef((props, ref) => {
   const [questions, setQuestions] = useState([]);
@@ -13,18 +14,38 @@ const filteredQuestions = React.forwardRef((props, ref) => {
     type, // Schema information
     onChange, // Method to handle patch events
   } = props;
-  // fetching questions
+  // fetching and removing questions
   useEffect(() => {
     let addedQuestionsRefs = props.parent.questions_list;
-    addedQuestionsRefs &&
-      addedQuestionsRefs.forEach((question) => {
-        client
-          .fetch(`*[_type == 'questions' && _id == '${question._ref}'][0]`)
-          .then((response) =>
-            setQuestions((prevQuestions) => [...prevQuestions, response])
-          )
-          .catch((err) => console.log(err));
+    if (addedQuestionsRefs?.length < parsedQuestions?.length) {
+      console.log("refs less than questions");
+      // remove question
+      let updatedQuestions = [];
+      addedQuestionsRefs.forEach((questionRef) => {
+        for (let index = 0; index < questions.length; index++) {
+          const question = questions[index];
+          if (questionRef._ref === question?._id) {
+            updatedQuestions.push(question);
+            break;
+          }
+        }
       });
+      setQuestions([...updatedQuestions]);
+    } else {
+      // add question
+      addedQuestionsRefs &&
+        addedQuestionsRefs.forEach((question) => {
+          client
+            .fetch(`*[_type == 'questions' && _id == '${question._ref}'][0]`)
+            .then((response) =>
+              setQuestions((prevQuestionsState) => [
+                ...prevQuestionsState,
+                response,
+              ])
+            )
+            .catch((err) => console.log(err));
+        });
+    }
   }, [props.parent.questions_list]);
   // remove duplicate quetsions
   useEffect(() => {
@@ -38,9 +59,10 @@ const filteredQuestions = React.forwardRef((props, ref) => {
           )
       );
       setParsedQuestions([...ParsedQuest]);
+    } else {
+      setParsedQuestions([...questions]);
     }
   }, [questions]);
-
   // HANDLERS
   function handleOnChange(e) {
     let select = e.target;
@@ -65,7 +87,9 @@ const filteredQuestions = React.forwardRef((props, ref) => {
               <option
                 key={question._id}
                 value={question._id}
-                selected={props.parent.selected_questions?._ref === question._id}
+                selected={
+                  props.parent.selected_questions?._ref === question?._id
+                }
               >
                 {question.question}
               </option>

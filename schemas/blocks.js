@@ -1,8 +1,7 @@
-import SelectedBlockQuestions from "../components/SelectedBlockQuestions";
 import filteredQuestions from "../components/filteredQuestions";
 import OptionsOfQuestion from "../components/optionsOfQuestion";
-import Option from "../components/Option";
 import NextBlockEditBox from "../components/NextBlockEditBox";
+//----------------------------------------------------------------
 export default {
   name: "blocks",
   type: "document",
@@ -66,22 +65,12 @@ export default {
       ],
       inputComponent:NextBlockEditBox
     },
-    // {
-    //   title: "Next Block",
-    //   name: "next_block",
-    //   type: "array",
-    //   of: [
-    //     {
-    //       type: "object",
-    //       fields: [
-    //         { name: "anwer", type: "string", title: "answer" },
-    //         { name: "answer_id", type: "string", title: "answer id" },
-    //         { name: "question", type: "string", title: "question" },
-    //         { name: "block_id", type: "string", title: "block id" },
-    //       ],
-    //     },
-    //   ],
-    //   inputComponent: SelectedBlockQuestions,
-    // },
+    {
+      name:"default_next_block_reference",
+      type:"reference",
+      title:"Default Next Block's Reference",
+      to:[{type:"blocks"}]
+    }
+
   ],
 };

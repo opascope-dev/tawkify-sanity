@@ -34,29 +34,31 @@ const OptionsOfQuestion = React.forwardRef((props, ref) => {
         answer_id:select.options[select.selectedIndex].value
     })));
   }
-  return (
-    <Stack>
-      <label className="label" style={{ marginBottom: "8px" }}>
-        {type.title}
-      </label>
-      <Select onChange={handleOnChange}>
-        <option></option>
-        {options.map((option) => {
-          if (option) {
-            return (
-              <option
-                key={option._key}
-                value={option._key}
-                selected={option._key == props.parent.question_options?.answer_id}
-              >
-                {option.answer}
-              </option>
-            );
-          }
-        })}
-      </Select>
-    </Stack>
-  );
+  if(options && options.length > 0){
+    return (
+      <Stack>
+        <label className="label" style={{ marginBottom: "8px" }}>
+          {type.title}
+        </label>
+        <Select onChange={handleOnChange}>
+          <option></option>
+          {options.map((option) => {
+            if (option) {
+              return (
+                <option
+                  key={option._key}
+                  value={option._key}
+                  selected={option._key == props.parent.question_options?.answer_id}
+                >
+                  {option.answer}
+                </option>
+              );
+            }
+          })}
+        </Select>
+      </Stack>
+    );
+  }
 });
 
 export default OptionsOfQuestion;

@@ -1,4 +1,3 @@
-import ReferenceSelect from "../components/ReferenceSelect";
 
 export default {
   name: "flows",
@@ -6,16 +5,15 @@ export default {
   title: "Flows",
   fields: [
     {
-      name: "path",
+      name: "name",
       type: "string",
-      title: "Path",
+      title: "Name",
     },
     {
-      title: "First Question",
-      name: "first_question",
-      type: "reference",
-      to:[{type:"questions"}],
-      
+      name:"blocks",
+      type:"array",
+      title:"Blocks",
+      of:[{type:"reference",to:[{type:"blocks"}]}]
     },
   ],
 };
