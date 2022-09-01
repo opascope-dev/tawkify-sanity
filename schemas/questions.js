@@ -60,16 +60,6 @@ export default {
               title: "ID",
               validation: (Rule) => Rule.required(),
             },
-
-            {
-              name: "question_reference",
-              type: "reference",
-              title: "Next Question",
-              to: [{ type: "questions" }],
-              hidden: ({ document }) =>
-                document?.final_question ||
-                document?.question_type === "multi"
-            },
           ],
         },
       ],
@@ -93,18 +83,6 @@ export default {
       options: {
         hotspot: true,
       },
-    },
-    {
-      title: "Default Next Question",
-      name: "default_next_question",
-      type: "reference",
-      to: [{ type: "questions" }],
-      hidden: ({ document }) => document?.final_question || document?.question_type === "single" || document?.question_type === "slider",
-    },
-    {
-      title: "Final Question",
-      name: "final_question",
-      type: "boolean",
     },
   ],
 };

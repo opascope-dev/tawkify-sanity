@@ -1,9 +1,8 @@
 import filteredQuestions from "../components/filteredQuestions";
-import OptionsOfQuestion from "../components/optionsOfQuestion";
-import NextBlockEditBox from "../components/NextBlockEditBox";
+import OptionsBlocks from "../components/OptonsBlocks";
 //----------------------------------------------------------------
 export default {
-  name: "blocks",
+  name: "questions_blocks",
   type: "document",
   title: "Blocks",
   fields: [
@@ -11,6 +10,7 @@ export default {
       title: "Name",
       type: "string",
       name: "name",
+      validation: Rule => Rule.required()
     },
     {
       title: "Questions",
@@ -22,24 +22,13 @@ export default {
           to: [{ type: "questions" }],
         },
       ],
-      validation: (Rule) => Rule.unique(),
+      validation: (Rule) => [Rule.unique(),Rule.required()]
     },
     {
       title: "Selected Questions",
-      name: "selected_questions",
-      type: "reference",
-      to: [{ type: "questions" }],
+      name: "selected_question",
+      type: "string",
       inputComponent: filteredQuestions,
-    },
-    {
-      title: "Selected Question's Options",
-      name: "question_options",
-      type: "object",
-      fields:[
-        {name:"question_id",title:"question id",type:"string"},
-        {name:"answer_id",title:"answer id",type:"string"},
-      ],
-      inputComponent: OptionsOfQuestion,
     },
     {
       title: "Next Block's' References",
@@ -50,27 +39,25 @@ export default {
           type: "object",
           fields: [
             {
-              name: "question_options",
+              name: "option_id",
               type: "string",
               title: "Option",
             },
             {
-              name: "next_block",
-              type: "reference",
-              title: "Next Block",
-              to: [{ type: "blocks" }],
+              name: "next_block_reference",
+              type: "string",
+              title: "nextBlockReference",
             },
           ],
         },
       ],
-      inputComponent:NextBlockEditBox
+      inputComponent: OptionsBlocks,
     },
     {
-      name:"default_next_block_reference",
-      type:"reference",
-      title:"Default Next Block's Reference",
-      to:[{type:"blocks"}]
-    }
-
+      name: "default_next_block_reference",
+      type: "reference",
+      title: "Default Next Block's Reference",
+      to: [{ type: "questions_blocks" }],
+    },
   ],
 };

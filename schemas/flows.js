@@ -13,7 +13,7 @@ export default {
       name:"blocks",
       type:"array",
       title:"Blocks",
-      of:[{type:"reference",to:[{type:"blocks"}]}]
+      of:[{type:"reference",to:[{type:"questions_blocks"}]}]
     },
   ],
 };

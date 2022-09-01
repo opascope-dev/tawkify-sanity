@@ -66,11 +66,11 @@ const filteredQuestions = React.forwardRef((props, ref) => {
   // HANDLERS
   function handleOnChange(e) {
     let select = e.target;
+    let value = select.options[select.selectedIndex].value;
+
     onChange(
       PatchEvent.from(
-        set({
-          _ref: select.options[select.selectedIndex].value,
-        })
+        set(value ? value : "")
       )
     );
   }
@@ -79,7 +79,7 @@ const filteredQuestions = React.forwardRef((props, ref) => {
       <label className="label" style={{ marginBottom: "8px" }}>
         {type.title}
       </label>
-      <Select ref={DOM_Selector} onChange={handleOnChange}>
+      <Select ref={DOM_Selector} onChange={handleOnChange} id="selectedQuestionSelector">
         <option></option>
         {parsedQuestions.map((question) => {
           if (question) {
@@ -88,7 +88,7 @@ const filteredQuestions = React.forwardRef((props, ref) => {
                 key={question._id}
                 value={question._id}
                 selected={
-                  props.parent.selected_questions?._ref === question?._id
+                  props.parent.selected_question === question?._id
                 }
               >
                 {question.question}
