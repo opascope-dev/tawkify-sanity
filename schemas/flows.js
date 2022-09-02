@@ -15,5 +15,11 @@ export default {
       title:"Blocks",
       of:[{type:"reference",to:[{type:"questions_blocks"}]}]
     },
+    {
+      title: 'Default Flow',
+      name: 'default_flow',
+      type: 'boolean',
+      initialValue:false
+    }
   ],
 };

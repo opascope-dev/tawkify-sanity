@@ -1,4 +1,3 @@
-import { string } from "prop-types";
 
 export default {
   name: "questions",

@@ -5,7 +5,6 @@ import createSchema from 'part:@sanity/base/schema-creator'
 import schemaTypes from 'all:part:@sanity/base/schema-type'
 
 import questions from './questions';
-import types from "./types";
 import flows from "./flows";
 import blocks from "./blocks";
 

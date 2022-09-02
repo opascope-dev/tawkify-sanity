@@ -1,3 +1,4 @@
+import filteredBlocks from "../components/filteredBlocks";
 import filteredQuestions from "../components/filteredQuestions";
 import OptionsBlocks from "../components/OptonsBlocks";
 //----------------------------------------------------------------
@@ -10,7 +11,7 @@ export default {
       title: "Name",
       type: "string",
       name: "name",
-      validation: Rule => Rule.required()
+      validation: (Rule) => Rule.required(),
     },
     {
       title: "Questions",
@@ -22,7 +23,7 @@ export default {
           to: [{ type: "questions" }],
         },
       ],
-      validation: (Rule) => [Rule.unique(),Rule.required()]
+      validation: (Rule) => [Rule.unique(), Rule.required()],
     },
     {
       title: "Selected Questions",
@@ -48,16 +49,27 @@ export default {
               type: "string",
               title: "nextBlockReference",
             },
+            {
+              name: "next_flow_reference",
+              type: "string",
+              title: "nextFlowReference",
+            },
           ],
         },
       ],
       inputComponent: OptionsBlocks,
     },
     {
-      name: "default_next_block_reference",
+      name: "default_next_flow_reference",
       type: "reference",
-      title: "Default Next Block's Reference",
-      to: [{ type: "questions_blocks" }],
+      title: "Default Next Flow's Reference",
+      to: [{ type: "flows" }],
     },
+    {
+      name:"defualt_next_block_reference",
+      type:"string",
+      title:"Default Next Block's Reference",
+      inputComponent:filteredBlocks
+    }
   ],
 };

@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Stack, Select } from "@sanity/ui";
 import PatchEvent, { set, unset } from "@sanity/form-builder/PatchEvent";
 import client from "part:@sanity/base/client";
-
+// style
 import "../styles/selectedBlock.css?raw";
-import { useMemo } from "react";
 
 const filteredQuestions = React.forwardRef((props, ref) => {
   const [questions, setQuestions] = useState([]);
@@ -18,7 +17,6 @@ const filteredQuestions = React.forwardRef((props, ref) => {
   useEffect(() => {
     let addedQuestionsRefs = props.parent.questions_list;
     if (addedQuestionsRefs?.length < parsedQuestions?.length) {
-      console.log("refs less than questions");
       // remove question
       let updatedQuestions = [];
       addedQuestionsRefs.forEach((questionRef) => {
@@ -67,29 +65,29 @@ const filteredQuestions = React.forwardRef((props, ref) => {
   function handleOnChange(e) {
     let select = e.target;
     let value = select.options[select.selectedIndex].value;
-
-    onChange(
-      PatchEvent.from(
-        set(value ? value : "")
-      )
-    );
+    onChange(PatchEvent.from(set(value ? value : "")));
   }
   return (
     <Stack>
       <label className="label" style={{ marginBottom: "8px" }}>
         {type.title}
       </label>
-      <Select ref={DOM_Selector} onChange={handleOnChange} id="selectedQuestionSelector">
+      <Select
+        ref={DOM_Selector}
+        onChange={handleOnChange}
+        id="selectedQuestionSelector"
+      >
         <option></option>
+        <option value="" disabled selected>
+          Select Question...
+        </option>
         {parsedQuestions.map((question) => {
           if (question) {
             return (
               <option
                 key={question._id}
                 value={question._id}
-                selected={
-                  props.parent.selected_question === question?._id
-                }
+                selected={props.parent.selected_question === question?._id}
               >
                 {question.question}
               </option>
