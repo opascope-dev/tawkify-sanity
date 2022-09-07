@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Select } from "@sanity/ui";
 import PatchEvent, { set } from "@sanity/form-builder/PatchEvent";
-import client from "part:@sanity/base/client";
 import getBlock from "../utils/getBlock";
 
 const OptionBox = ({

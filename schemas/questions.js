@@ -1,4 +1,3 @@
-
 export default {
   name: "questions",
   type: "document",
@@ -40,6 +39,19 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name:"input_type",
+      title:"Input Type",
+      type:"string",
+      options:{
+        list:[
+          {title:"Date",value:"date"},
+          {title:"Text",value:"text"},
+          {title:"Options",value:"options"},
+        ]
+      },
+      hidden: ({ document }) => document?.question_type !== "input",
+    },
+    {
       title: "Answers",
       name: "answers",
       type: "array",
@@ -62,7 +74,7 @@ export default {
           ],
         },
       ],
-      hidden: ({ document }) => document?.question_type === "input",
+      hidden: ({ document }) => document?.question_type === "input" && document?.input_type !== "options"
     },
     {
       title: "Endpoint",
