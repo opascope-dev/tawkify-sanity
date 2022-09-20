@@ -77,6 +77,12 @@ export default {
       hidden: ({ document }) => document?.question_type === "input" && document?.input_type !== "options"
     },
     {
+      name:"options_cols",
+      type:"number",
+      title:"Columns (i.e. 2)",
+      hidden: ({ document }) => document?.question_type !== "multi" && document?.question_type !== "single"
+    },
+    {
       title: "Endpoint",
       name: "endpoint",
       type: "url",
