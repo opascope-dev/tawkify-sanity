@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Stack, Select } from "@sanity/ui";
-import PatchEvent, { set, unset } from "@sanity/form-builder/PatchEvent";
+import PatchEvent, { set } from "@sanity/form-builder/PatchEvent";
 import client from "part:@sanity/base/client";
 // style
 import "../styles/selectedBlock.css?raw";

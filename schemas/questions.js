@@ -1,3 +1,5 @@
+import OptionsTextArea from "../components/OptionsTextArea";
+
 export default {
   name: "questions",
   type: "document",
@@ -52,10 +54,10 @@ export default {
       hidden: ({ document }) => document?.question_type !== "input",
     },
     {
-      title: "Answers",
+      title:"Answers",
       name: "answers",
       type: "array",
-      of: [
+      of:[
         {
           type: "object",
           fields: [
@@ -63,18 +65,22 @@ export default {
               name: "answer",
               type: "string",
               title: "Answer",
-              validation: (Rule) => Rule.required(),
             },
             {
               name: "answer_id",
               type: "string",
               title: "ID",
-              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "key",
+              type: "string",
+              title: "Key",
             },
           ],
         },
       ],
-      hidden: ({ document }) => document?.question_type === "input" && document?.input_type !== "options"
+      hidden: ({ document }) => document?.question_type === "input" && document?.input_type !== "options",
+      inputComponent:OptionsTextArea
     },
     {
       name:"options_cols",
