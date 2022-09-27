@@ -10,6 +10,12 @@ export default {
       title: "Name",
     },
     {
+      name: "path",
+      type: "string",
+      title: "Path",
+      hidden: ({ document }) => document?.default_flow,
+    },
+    {
       name:"blocks",
       type:"array",
       title:"Blocks",
