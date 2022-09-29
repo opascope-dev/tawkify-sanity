@@ -7,6 +7,7 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 import questions from './questions';
 import flows from "./flows";
 import blocks from "./blocks";
+import settings from "./settings";
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -19,5 +20,6 @@ export default createSchema({
     questions,
     blocks,
     flows,
+    settings,
   ]),
 })
