@@ -8,6 +8,7 @@ import questions from './questions';
 import flows from "./flows";
 import blocks from "./blocks";
 import settings from "./settings";
+import pages from "./pages";
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -21,5 +22,6 @@ export default createSchema({
     blocks,
     flows,
     settings,
+    pages,
   ]),
 })
