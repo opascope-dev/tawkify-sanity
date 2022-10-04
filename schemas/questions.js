@@ -10,7 +10,7 @@ export default {
   fields: [
     {
       name: "question",
-      type: "string",
+      type: "text",
       title: "Question",
       validation: (Rule) => Rule.required(),
     },

@@ -19,6 +19,16 @@ export default {
         title: "Headline",
       },
       {
+        name: "sub_copy",
+        title: "Sub Copy",
+        type: 'array',
+        of: [
+          {
+            type: 'block'
+          }
+        ]
+      },
+      {
         name: "schedule_cta_iframe_url",
         type: "string",
         title: "Schedule CTA Iframe URL",

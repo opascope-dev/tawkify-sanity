@@ -16,7 +16,7 @@ const OptionsTextArea = React.forwardRef((props, ref) => {
   const handleInputOnChange = useCallback(
     (e) => {
       const data = e.target.value;
-      const rows = data?.split(",\n");
+      const rows = data?.split(";\n");
       let isInvalid = false;
 
       const optionsArr = [];
@@ -41,7 +41,6 @@ const OptionsTextArea = React.forwardRef((props, ref) => {
           setInvalidInput(true);
         }
       });
-
       !isInvalid && onChange(PatchEvent.from(set([...optionsArr])));
     },
     [onChange]
@@ -89,10 +88,13 @@ function parseSotreOptions(options) {
   stringOptions = stringOptions.replace(/"answer_id"/g, "id");
   stringOptions = stringOptions.replace(/"/g, "");
   stringOptions = stringOptions.replace(/},/g, "break");
+  stringOptions = stringOptions.replace(/};/g, "break");
   stringOptions = stringOptions.replace(/,/g, "\n");
+  stringOptions = stringOptions.replace(/;/g, "\n");
   stringOptions = stringOptions.replace(/break/g, ",\n");
   stringOptions = stringOptions.replace(/}/g, "");
   stringOptions = stringOptions.replace(/:/g, "=");
+  stringOptions = stringOptions.replace(/,/g, ";");
 
   return stringOptions;
 }
