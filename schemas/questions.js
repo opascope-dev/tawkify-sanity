@@ -97,7 +97,12 @@ export default {
     {
       title: "Sub Copy",
       name: "sub_copy",
-      type: "string",
+      type: 'array',
+      of: [
+        {
+          type: 'block'
+        }
+      ]
     },
     {
       title: "Icon",
