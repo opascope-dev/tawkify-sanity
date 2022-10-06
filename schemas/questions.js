@@ -95,8 +95,13 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
-      title: "Sub Copy",
-      name: "sub_copy",
+      title: "Sub Copy Before Question",
+      name: "sub_copy_before",
+      type: 'string',
+    },
+    {
+      title: "Sub Copy After Question",
+      name: "sub_copy_after",
       type: 'array',
       of: [
         {
