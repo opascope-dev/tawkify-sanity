@@ -6,6 +6,7 @@ export default {
   title: "Questions",
   initialValue: {
     final_question: false,
+    is_question_required:true
   },
   fields: [
     {
@@ -117,5 +118,10 @@ export default {
         hotspot: true,
       },
     },
+    {
+      title: 'Required',
+      name: 'is_question_required',
+      type: 'boolean',
+    }
   ],
 };
