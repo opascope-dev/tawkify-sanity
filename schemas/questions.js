@@ -1,3 +1,4 @@
+import { string } from "prop-types";
 import OptionsTextArea from "../components/OptionsTextArea";
 
 export default {
@@ -6,7 +7,8 @@ export default {
   title: "Questions",
   initialValue: {
     final_question: false,
-    is_question_required:true
+    is_question_required:true,
+    is_answer_array:false, 
   },
   fields: [
     {
@@ -117,6 +119,12 @@ export default {
       options: {
         hotspot: true,
       },
+    },
+    {
+      title: 'Is Answer type is Array',
+      name: 'is_answer_array',
+      type: 'boolean',
+      hidden: ({ document }) => document?.question_type === "multi"
     },
     {
       title: 'Required',
