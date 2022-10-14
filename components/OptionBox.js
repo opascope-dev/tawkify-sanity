@@ -18,7 +18,7 @@ const OptionBox = ({
   useEffect(() => {
     if (flows && flows.length > 0) {
       let currentReferenceOBJ = nextBlocksReferences?.find(
-        (referenceOBJ) => referenceOBJ.option_id === option._key
+        (referenceOBJ) => referenceOBJ.option_id === option.answer_id
       );
       if (currentReferenceOBJ) {
         let flowId = currentReferenceOBJ.next_flow_reference;
@@ -68,11 +68,13 @@ const OptionBox = ({
   const handleBlockSelectOnChange = (e, id) => {
     const selectEle = e.target;
     const blockId = selectEle.options[selectEle.selectedIndex].value;
+    
     const data =
       nextBlocksReferences.length > 0 ? nextBlocksReferences : options;
+     
     const references = data.map((optionOBJ) => {
       const updatedOption = {
-        option_id: optionOBJ._key ?? optionOBJ.option_id,
+        option_id: optionOBJ.answer_id ?? optionOBJ.option_id,
         next_block_reference: optionOBJ.next_block_reference ?? "",
         next_flow_reference: optionOBJ.next_flow_reference ?? "",
       };
@@ -86,7 +88,7 @@ const OptionBox = ({
     onChange(PatchEvent.from(set([...references])));
   };
   return (
-    <Card className="card" key={option?._key}>
+    <Card className="card" key={option?.answer_id}>
       <span className="option_label">{option?.answer}</span>
       <Select onChange={(e) => handleFlowSelectOnChange(e)}>
         <option></option>
@@ -101,14 +103,14 @@ const OptionBox = ({
               nextBlocksReferences,
               "next_flow_reference",
               flow._id,
-              option?._key
+              option?.answer_id
             )}
           >
             {flow?.name}
           </option>
         ))}
       </Select>
-      <Select onChange={(e) => handleBlockSelectOnChange(e, option?._key)}>
+      <Select onChange={(e) => handleBlockSelectOnChange(e, option?.answer_id)}>
         <option></option>
         <option value="" disabled selected>
           Select Block...
@@ -121,7 +123,7 @@ const OptionBox = ({
               nextBlocksReferences,
               "next_block_reference",
               block?._id,
-              option?._key
+              option?.answer_id
             )}
           >
             {block?.name}
