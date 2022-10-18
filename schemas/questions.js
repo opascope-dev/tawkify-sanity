@@ -14,8 +14,7 @@ export default {
     {
       name: "question",
       type: "text",
-      title: "Question",
-      validation: (Rule) => Rule.required(),
+      title: "Question"
     },
     {
       name: "question_id",
