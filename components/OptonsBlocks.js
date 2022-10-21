@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Stack } from "@sanity/ui";
 import PatchEvent, { set } from "@sanity/form-builder/PatchEvent";
-import client from "part:@sanity/base/client";
+import sanityClient from "part:@sanity/base/client";
 import OptionBox from "./OptionBox";
 
+const client = sanityClient.withConfig({apiVersion: '2021-06-07'})
 const OptonsBlocks = React.forwardRef((props, ref) => {
   const [nextBlocksReferences, setNextBlocksReferences] = useState([]);
   const [options, setOptions] = useState([]);
@@ -66,9 +67,10 @@ const OptonsBlocks = React.forwardRef((props, ref) => {
         <label className="label" style={{ marginBottom: "18px" }}>
           {props.type.title}
         </label>
-        {options?.map((option) => {
+        {options?.map((option, index) => {
           return (
             <OptionBox
+              key={index}
               option={option}
               options={options}
               nextBlocksReferences={nextBlocksReferences}

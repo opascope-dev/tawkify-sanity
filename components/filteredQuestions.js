@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Stack, Select } from "@sanity/ui";
 import PatchEvent, { set } from "@sanity/form-builder/PatchEvent";
-import client from "part:@sanity/base/client";
+import sanityClient from "part:@sanity/base/client";
 // style
 import "../styles/selectedBlock.css?raw";
-
+const client = sanityClient.withConfig({apiVersion: '2021-06-07'})
 const filteredQuestions = React.forwardRef((props, ref) => {
   const [questions, setQuestions] = useState([]);
   const [parsedQuestions, setParsedQuestions] = useState([]);

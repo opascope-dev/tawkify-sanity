@@ -1,5 +1,6 @@
-import client from "part:@sanity/base/client";
+import sanityClient from "part:@sanity/base/client";
 
+const client = sanityClient.withConfig({apiVersion: '2021-06-07'})
 async function getBlock(id) {
   try {
     const block = await client.fetch(

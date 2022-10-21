@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, Select } from "@sanity/ui";
 import PatchEvent, { set } from "@sanity/form-builder/PatchEvent";
 import getBlock from "../utils/getBlock";
@@ -13,6 +13,7 @@ const OptionBox = ({
 }) => {
   const [blocks, setBlocks] = useState([]);
   const [selectedFlow, setSelectedFlow] = useState("");
+  const [answerId, setAnswerId] = useState("");
 
   // getting stored references
   useEffect(() => {
@@ -43,10 +44,12 @@ const OptionBox = ({
   //
   // handlers
   //
-  const handleFlowSelectOnChange = (e) => {
+  const handleFlowSelectOnChange = (e, id) => {
     const selectEle = e.target;
     const flowId = selectEle.options[selectEle.selectedIndex].value;
     setSelectedFlow(flowId);
+    setAnswerId(id);
+    updateReferences(flowId, id)
     if (flowId) {
       const flow = flows?.find((flowOBJ) => flowOBJ._id === flowId);
       const blocks = flow?.blocks ?? [];
@@ -68,10 +71,12 @@ const OptionBox = ({
   const handleBlockSelectOnChange = (e, id) => {
     const selectEle = e.target;
     const blockId = selectEle.options[selectEle.selectedIndex].value;
-    
-    const data =
-      nextBlocksReferences.length > 0 ? nextBlocksReferences : options;
-     
+    console.log(nextBlocksReferences, "nextBlocksReferences");
+    updateReferences(blockId, id)
+    setAnswerId(id);
+  };
+  const updateReferences = (referenceId, id) => {
+    const data = nextBlocksReferences.length > 0 ? nextBlocksReferences : options;
     const references = data.map((optionOBJ) => {
       const updatedOption = {
         option_id: optionOBJ.answer_id ?? optionOBJ.option_id,
@@ -79,20 +84,23 @@ const OptionBox = ({
         next_flow_reference: optionOBJ.next_flow_reference ?? "",
       };
       if (optionOBJ._key === id || optionOBJ.option_id === id) {
-        updatedOption.next_block_reference = blockId;
+        updatedOption.next_block_reference = referenceId;
         updatedOption.next_flow_reference = selectedFlow;
       }
       return updatedOption;
     });
+    console.log(references, "References");
     setNextBlocksReferences([...references]);
     onChange(PatchEvent.from(set([...references])));
   };
+  useEffect(() => {
+    updateReferences(selectedFlow, answerId);
+  }, [selectedFlow, answerId]);
   return (
     <Card className="card" key={option?.answer_id}>
       <span className="option_label">{option?.answer}</span>
-      <Select onChange={(e) => handleFlowSelectOnChange(e)}>
-        <option></option>
-        <option value="" disabled selected>
+      <Select onChange={(e) => handleFlowSelectOnChange(e, option?.answer_id)}>
+        <option value="" selected>
           Select Flow...
         </option>
         {flows?.map((flow) => (
@@ -111,8 +119,7 @@ const OptionBox = ({
         ))}
       </Select>
       <Select onChange={(e) => handleBlockSelectOnChange(e, option?.answer_id)}>
-        <option></option>
-        <option value="" disabled selected>
+        <option value="" selected>
           Select Block...
         </option>
         {blocks?.map((block) => (
