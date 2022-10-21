@@ -129,6 +129,16 @@ export default {
       title: 'Required',
       name: 'is_question_required',
       type: 'boolean',
+    },
+    {
+      title: 'Viewed Event',
+      name: 'viewed_event',
+      type: 'string',
+    },
+    {
+      title: 'Completed Event',
+      name: 'completed_event',
+      type: 'string',
     }
   ],
 };
